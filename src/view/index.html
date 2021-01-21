@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.3.0/video-js.min.css" rel="stylesheet">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.3.0/video.min.js"></script>
+	</head>
+
+	<body>
+		<label>选取视频</label>
+
+		<br>
+		<input type="file" id='videoUp' accept="video/mp4">
+		<!--video用于显示媒体设备的视频流，自动播放-->
+		<video id="video" class="video-js  vjs-default-skin" controls="controls" autoplay="autoplay" preload="metadata" muted="muted" x5-playsinline="" playsinline="" webkit-playsinline="">调用手机相册</video>
+		<br />
+
+		<script type="text/javascript">
+			function getObjectURL(file) {
+				var url = null;
+				if(window.createObjcectURL != undefined) {
+					url = window.createOjcectURL(file);
+				} else if(window.URL != undefined) {
+					url = window.URL.createObjectURL(file);
+				} else if(window.webkitURL != undefined) {
+					url = window.webkitURL.createObjectURL(file);
+				}
+				return url;
+			}
+			//jquery代码
+			$(function() {
+				//单文件上传
+				$("#videoUp").on("change", function() {
+					//$(this)[0] 等价于$(this).get(0)，将 JQuery 对象转为 DOM 对象，files 为其属性，得到的是一个文件对象数组
+					var files = $(this)[0].files;
+					if(files.length > 0) { //未选中文件时，长度为0
+						var file = files[0]; //因为是单文件上传，所以只有一个文件（File）对象
+
+						var video = document.getElementById("video");
+
+						var objURL = getObjectURL(this.files[0]); //这里的objURL就是input file的真实路径
+
+						var option = {
+							muted: true,
+							controls: true,
+							height: 320,
+							width: 170,
+							loop: false,
+							// 更多配置.....
+						};
+
+						var source = [{
+							type: "video/mp4",
+							src: objURL
+						}]
+
+						var player = videojs('video', option, function onPlayerReady() {
+							this.src(source);
+							this.autoplay();
+						});
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>
